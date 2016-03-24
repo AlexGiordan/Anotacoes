@@ -1,0 +1,25 @@
+Estrutura de dados I 24032016
+
+* Implementar lista duplamente encadeada
+** Implementar funções basicas
+** Criar biblioteca .h
+** Criar prototipos de funções na .h
+** Criar biblioteca .c para execução das funções
+** (Como definir o tamanho de uma lista sem variavel global)
+** Criar padrão de nomes de variaves
+** Criar função para iniciar a Lista
+** Criar função para finalizar lista
+** Criar função para verificar se lista esta vazia
+** Criar função para verificar se lista esta cheia
+** Criar função para verificar o numero total de nodos da lista
+** Criar função para verificar se nodo criado é valido
+** Criar função para verificar se lista já foi inicializada
+** Criar função para Visualização de Menu
+** Criar função para tratamento de opção de Menu
+** Criar função para pesquisar nodo e apresentar as informação caso exista e vice versa
+** Implementar função inserir no inicio
+** Implementar função inserir no meio 
+** Implementar função inserir no fim
+** Implementar função remover no inicio
+** Implementar função remover no meio
+** Implementar função remover no fim
