@@ -7,6 +7,7 @@ Estrutura de dados I 24032016
 ** Criar biblioteca .c para execução das funções
 ** (Como definir o tamanho de uma lista sem variavel global)
 ** Criar padrão de nomes de variaves
+** Criar função para alocar memoria para um nodo
 ** Criar função para iniciar a Lista
 ** Criar função para finalizar lista
 ** Criar função para verificar se lista esta vazia
