@@ -1,0 +1,26 @@
+Como compilar e executar um programa implementado em C pelo Linux?
+
+Exemplo 1.
+
+Passo 1 : Tenha certeza que o GCC esta instalado corretamente no ubuntu.
+Passo 2 : Abra o terminal de comando.
+Passo 3 : Explore os diretorios ate o local onde encontra-se salvo o .c (Use os comandos Dir e Cd).
+Passo 4 : Digite o seguinte comando:(Build)
+  gcc nomedoprograma.c -o nomedoprograma (Enter)
+Passo 5 : Digite o seguinte comando:(Run)
+  ./nomedoprograma
+  
+Exemplo 2.
+
+Passo 1 : Tenha certeza que o GCC esta instalado corretamente no ubuntu.
+Passo 2 : Abra o terminal de comando.
+Passo 3 : Explore os diretorios ate o local onde encontra-se salvo o .c (Use os comandos Dir e Cd).
+Passo 4 : Digite o seguinte comando:(Build)
+  gcc -c nomedoprograma.c (Enter)
+  gcc nomedoprograma.o -o nomedoprograma
+Passo 5 : Digite o seguinte comando:(Run)
+  ./nomedoprograma
+
+
+obs se tudo estiver correto devera rodar o programa normalmente.  
+  
