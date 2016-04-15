@@ -1,0 +1,945 @@
+
+
+    High-Tech
+    Saúde
+
+    Cadastre-se
+    Idioma
+    Entrar
+
+CCM
+CCM / Facebook Recevez notre newsletter
+
+    Fórum
+    Dicas
+    Download
+    Notícias
+    Enciclopédia
+
+Dicas
+Programação
+Linguagens
+C
+
+    Regulamento 
+
+Faça uma pergunta »
+Lista duplamente encadeada
+BR
+FR
+Rearrange the Order of Your PowerPoint PresentationUS
+Linux: El comando fdiskES
+Tagliare file audio in PowerPoint 2010IT
+Abril 2016
+
+
+LISTAS DUPLAMENTE ENCADEADAS
+
+    Requisitos
+    I. INTRODUÇÃO
+    II. Definição
+    III. A construção do protótipo de um elemento da lista
+    IV. Operações em listas duplamente encadeadas
+        A. Inicialização
+        B. Inserção de um elemento na lista
+            1. Inserção em uma lista vazia
+            2. Inserção no início da lista
+            3. Inserção no fim da lista
+            4. Inserção antes de um elemento da lista
+            5. Inserção depois de um elemento da lista 
+        C. Remoção de um elemento da lista
+            Remoção na lista 
+        D. Exibição da lista
+        E. Destruição da lista 
+    V. Exemplo completo
+        dlista.h
+        dlista_function.h
+        dlista.c 
+    VI. Veja também
+    Veja também: Lista duplamente encadeada
+
+
+Requisitos
+Os tipos de dados
+As estruturas
+O uso do typedef
+Os ponteiros
+As funções do usuário
+As listas simplesmente encadeadas (facultativo)
+I. INTRODUÇÃO
+Este artigo visa compreender as listas duplamente ligadas.
+A escolha da implementação em função de necessidades e desempenho é sua.
+As listas duplamente encadeadas podem ser usadas quando várias operações de inserção/remoção de elementos são necessárias.
+II. Definição
+As listas duplamente encadeadas são estruturas de dados semelhantes às listas simplesmente encadeadas.
+A alocação da memória é feita durante a execução.
+No entanto, em comparação com as listas simplesmente encadeadas a conexão entre os elementos é feita através de dois ponteiros (um que aponta para o elemento anterior, e o outro, para o seguinte).
+
+
+O ponteiro anterior ao primeiro elemento deve apontar para NULL (o início da lista).
+O ponteiro seguinte ao último elemento deve apontar para NULL (o fim da lista).
+
+Para acessar um elemento, a lista pode ser percorrida pelos dois lados:
+
+    Começando do alto, o ponteiro "seguinte" permite o deslocamento para o elemento seguinte.
+    Começando do final, o ponteiro "anterior" permite o deslocamento para o elemento anterior.
+
+
+
+Em suma, o movimento é feito em ambas as direções, do primeiro para o último elemento e/ou do último para o primeiro.
+III. A construção do protótipo de um elemento da lista
+Para definir um elemento da lista será usado o tipo struct.
+O elemento da lista conterá um campo dado, um ponteiro "anterior" e um ponteiro "seguinte".
+
+Os ponteiros "anterior" e "seguinte" devem ser do mesmo tipo que o elemento, caso contrário, eles não poderão apontar para um elemento da lista.
+O ponteiro do "anterior" vai permitir o acesso ao elemento anterior, enquanto que o ponteiro "seguinte" permitirá o acesso ao próximo elemento.
+
+typedef struct dl_elementoLista {   
+  char *dado;   
+  struct dl_elementoLista *anterior;   
+  struct dl_elementoLista *seguinte;   
+}dl_elemento;   
+
+
+
+Para o controle da lista é melhor salvar certos elementos:
+
+    o primeiro elemento,
+    o último elemento e
+    o número de elementos. 
+
+
+
+Para fazê-lo, será usada outra estrutura (isto não é obrigatório, as variáveis podem ser usadas).
+Veja a sua composição:
+
+typedef struct dl_ListaDetectada {   
+  dl_elemento *início;   
+  dl_elemento *fim;   
+  int tamanho;   
+}dl_Lista;   
+
+
+O ponteiro de início conterá o endereço do primeiro elemento da lista.
+O ponteiro de fim conterá o endereço do último elemento da lista.
+A variável tamanho contém o número de elementos.
+
+Seja qual for a posição na lista, os ponteiros de início e fim sempre apontarão, respectivamente, para o primeiro e o último elemento.
+O campo tamanho conterá o número de elementos da lista, seja qual for a operação efetuada na lista.
+IV. Operações em listas duplamente encadeadas
+Para a inserção e a exclusão, uma única função basta, se ela foi bem desenvolvida, de acordo com as necessidades.
+No entanto, lembrem-se que este artigo é puramente didático.
+É por isso que eu escrevi uma função para cada operação de inserção e exclusão.
+A. Inicialização
+Protótipo da função:
+
+void inicialização (Lista *lista);
+
+
+Esta operação deve ser feita antes de qualquer outra operação da lista.
+Ela inicializa o ponteiro de inicio e de fim com o ponteiro NULL, e o tamanho com o valor 0.
+
+A função
+
+void inicialização (Lista *lista){   
+  lista->início = NULL;   
+  lista->fim = NULL;   
+  tamanho = 0;   
+}   
+
+
+B. Inserção de um elemento na lista
+Veja o algoritmo de inserção e de backup dos elementos:
+
+    Declaração dos elementos a serem inseridos
+    Alocação da memória para o novo elemento
+    Preenchimento do conteúdo do campo de dados
+    Atualização dos ponteiros para o elemento anterior e o elemento seguinte
+    Atualização dos ponteiros para o primeiro e o último elemento, se necessário.
+        Caso especial: em uma lista com apenas um elemento, o primeiro também é o último.
+        Atualização do Tamanho lista 
+
+
+
+Para adicionar um elemento na lista, existem várias soluções:
+
+    1. Inserção em uma lista vazia
+    2. Inserção no início da lista
+    3. Inserção no fim da lista
+    4. Inserção antes de um elemento
+    5. Inserção depois de um elemento
+
+
+1. Inserção em uma lista vazia
+Protótipo da função :
+
+int ins_na_lista_vazia (dl_Lista * lista, char *dado);
+
+
+A função retorna -1 em caso de falha, se não ela retorna 0.
+
+Passos:
+
+    Alocação da memória para o novo elemento
+    Preenchimento do campo de dados do novo elemento
+    O ponteiro "anterior" do novo elemento apontará para NULL (já que a inserção é feita em uma lista vazia, utilizamos o endereço do ponteiro de início que equivale ao NULL)
+    O ponteiro "seguinte" do novo elemento apontará para NULL (já que a inserção é feita em uma lista vazia, utilizamos o endereço do ponteiro de fim que equivale ao NULL )
+    Os ponteiros de início e de fim apontarão para o novo elemento
+    O tamanho é atualizado
+
+
+
+
+A função
+
+int inserção_na_lista_vazia (dl_Lista * lista, char *dado){   
+  dl_elemento *novo_elemento;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  novo_elemento->anterior = lista->início;   
+  novo_elemento->seguinte = lista>fim;   
+  lista->início = novo_elemento;   
+  lista->fim = novo_elemento;   
+  liste->tamanho++;   
+  return 0;   
+}   
+
+
+2. Inserção no início da lista
+Protótipo da função :
+
+int ins_início_lista (dl_Lista * lista, char *dado);
+
+
+A função retorna -1 em caso de falha, se não ela retorna 0.
+
+
+Passos:
+
+    Alocação da memória para o novo elemento
+    Preenchimento do campo de dados do novo elemento
+    O ponteiro anterior ao novo elemento aponta para NULL
+    O ponteiro seguinte ao novo elemento aponta para o 1° elemento
+    O ponteiro anterior ao 1° elemento aponta para o novo elemento
+    O ponteiro de início aponta para o novo elemento
+    O ponteiro de fim não muda
+    O tamanho é incrementado
+
+
+
+[Image: http://www.commentcamarche.net/faq/images/0-H5QnEb0e-dl-ins-início-s-.png|500px|]
+
+A função
+
+int ins_início_lista (dl_Lista * lista, char *dado){   
+  dl_elemento *novo_elemento;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  novo_elemento->anterior = NULL;   
+  novo_elemento->seguinte = lista->início;   
+  lista->início->anterior = novo_elemento;   
+  lista->início = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+
+3. Inserção no fim da lista
+Protótipo da função :
+
+int ins_fim_lista (dl_Lista * lista, char *dado);
+
+
+A função retorna -1 em caso de falha, se não ela retorna 0.
+
+Passos:
+
+    Alocação da memória para o novo elemento
+    Preenchimento do campo de dados do novo elemento
+    O ponteiro "seguinte" ao novo elemento aponta para NULL
+    O ponteiro "anterior" ao novo elemento aponta para o último elemento (é o ponteiro de fim que contém, por enquanto, o seu endereço)
+    O ponteiro "seguinte" ao último elemento apontará para o novo elemento
+    O ponteiro de fim aponta para o novo elemento
+    O ponteiro de início não muda
+    O tamanho é incrementado
+
+
+
+[Image: http://www.commentcamarche.net/faq/images/0-GkOJj4j7-dl-ins-fim-s-.png|500px|]
+
+A função
+
+int ins_fim_lista (dl_Lista * lista, char *dado){   
+  dl_elemento *novo_elemento;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  novo_elemento->seguinte = NULL;   
+  novo_elemento->anterior = lista->fim;   
+  lista->fim->seguinte = novo_elemento;   
+  lista->fim = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+
+4. Inserção antes de um elemento da lista
+Protótipo da função :
+
+int ins_antes (dl_Lista * lista, char *dado, int pos);
+
+
+A função retorna -1 em caso de falha, se não ela retorna 0.
+
+A inserção será feita antes de uma certa posição transformada em argumento para a função.
+A posição indicada não deve ser nem o 1° nem o último elemento. Neste caso, é preciso utilizar as funções de inserção no início e/ou fim da lista.
+
+Passos:
+
+    Alocação da memória para o novo elemento
+    Preenchimento do campo de dados do novo elemento
+    Escolha de uma posição na lista (a inserção será feita depois da posição escolhida)
+    O ponteiro "seguinte" ao novo elemento aponta para o elemento em curso.
+    O ponteiro "anterior" ao novo elemento aponta para o endereço no qual aponta o ponteiro anterior do elemento em curso. (une explicação meio enrolada, esperando que a imagem os ajude a compreender melhor)
+    O ponteiro "seguinte" ao elemento que precede o elemento em curso apontará para o novo elemento
+    O ponteiro "anterior" ao elemento em curso ponta para o novo elemento
+    O ponteiro de fim não muda
+    O ponteiro de início só muda se a posição escolhida for a posição 1
+    O tamanho é incrementado de uma unidade
+
+
+
+[Image: http://www.commentcamarche.net/faq/images/0-q9Z5D6kV-dl-ins-antes-s-.png|341px|]
+
+[Image: http://www.commentcamarche.net/faq/images/0-BABWMSPV-dl-ins-antes2-s-.png|447px|]
+
+A função
+
+int ins_antes (dl_Lista * lista, char *dado, int pos){   
+  int i;   
+  dl_elemento *novo_elemento, *em curso;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  em curso = lista->início;   
+  for (i = 1; i < pos; ++i)   
+    em curso = em curso->seguinte;   
+  novo_elemento->seguinte = em curso;   
+  novo_elemento-> anterior = em curso->anterior;   
+  if(em curso->anterior == NULL)   
+    lista->início = novo_elemento;   
+  else   
+    em curso->anterior->seguinte = novo_elemento;   
+  em curso->anterior = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+
+5. Inserção depois de um elemento da lista
+Protótipo da função :
+
+int ins_apres (dl_Lista * lista, char *dado, int pos);
+
+
+A função retorna -1 em caso de falha, se não ela retorna 0.
+
+A inserção será feita após uma determinada posição transformada em argumento da função.
+A posição indicada não deve ser o último elemento. Neste caso, utilizar a função de inserção no final da lista.
+
+Passos:
+
+    Alocação da memória para o novo elemento
+    Preenchimento do campo de dados do novo elemento
+    Escolha de uma posição na lista (a inserção será feita depois da posição escolhida)
+    O ponteiro "seguinte" ao novo elemento aponta para o endereço no qual aponta o ponteiro "seguinte" do elemento em curso (veja a imagem).
+    O ponteiro "anterior" ao novo elemento aponta para o elemento em curso.
+    O ponteiro "anterior" ao elemento que sucede o elemento em curso apontará para o novo elemento
+    O ponteiro "seguinte" ao elemento em curso aponta para o novo elemento
+    O ponteiro de início não muda
+    O ponteiros de fim só muda se apenas a posição escolhida for a posição do último elemento (o tamanho da lista)
+    O tamanho é incrementado de uma unidade
+
+
+
+
+
+A função
+
+int ins_apres (dl_Lista * lista, char *dado, int pos){   
+  int i;   
+  dl_elemento *novo_elemento, *em curso;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  em curso = lista->início;   
+  for (i = 1; i < pos; ++i)   
+    em curso = em curso->seguinte;   
+  novo_elemento->seguinte = em curso->seguinte;   
+  novo_elemento->anterior = em curso;   
+  if(em curso->seguinte == NULL)   
+    lista->fim = novo_elemento;   
+  else   
+    em curso->seguinte->anterior = novo_elemento;   
+  em curso->seguinte = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+
+C. Remoção de um elemento da lista
+Veja o algoritmo de remoção de um elemento da lista :
+
+    O uso de um ponteiro temporário para salvar o endereço dos elementos a serem removidos
+    O elemento a ser removido pode estar em qualquer posição da lista.
+
+
+Em comparação com a lista simplesmente encadeada, onde a remoção só pode ser feita após um elemento designado, as listas duplamente encadeadas são mais fáceis de manipular, graças aos dois ponteiros que mantém um rastro de antes como do depois.
+
+    Liberar a memória ocupada pelo elemento removido
+    Atualizar o tamanho da lista 
+
+
+
+Para remover um elemento da lista existem várias soluções:
+
+    1. Remoção no início da lista
+    2. Remoção no fim da lista
+    3. Remoção antes de um elemento
+    4. Remoção depois de um elemento
+    5. Remoção de um elemento
+
+
+
+Porém, a remoção no início e no fim das listas duplamente encadeadas, assim como antes ou depois de um elemento vem a ser a remoção da posição 0 (zero) ou da posição N (N = número de elementos da lista) ou em outro lugar da lista.
+
+No caso das listas duplamente encadeadas, não tem problema remover em qualquer posição , devido aos ponteiros "anterior" e "seguinte", que mantêm a ligação entre os elementos da lista.
+É por isso que vamos criar uma única função.
+
+    Se quisermos remover o elemento do início da lista, vamos escolher a posição zero
+    Se quisermos remover o elemento do fim da lista, vamos escolher a posição N (o número de elementos)
+    Se quisermos remover um elemento qualquer, então vamos escolher a sua posição na lista
+
+
+Remoção na lista
+Protótipo da função :
+
+int remov(dl_Lista *lista, int pos);
+
+
+A função retorna -1 em caso de falha, se não ela retorna 0.
+
+Podemos distinguir várias situações:
+
+    Remoção da posição 1 em uma lista com apenas um elemento
+    Remoção da posição 1 em uma lista com vários elementos
+    Remoção da última posição (o último elemento)
+    Remoção em outro lugar da lista para uma certa posição
+
+
+A remoção em uma lista vazia não tem sentido
+
+Passos:
+
+    A posição escolhida é 1 (o caso da remoção do 1° elemento da lista)
+        o ponteiro remov_elemento conterá o endereço do 1° elemento
+        o ponteiro de início conterá o endereço mantido pelo ponteiro "seguinte" ao 1° elemento que queremos remover (se este ponteiro equivale a NULL então atualizaremos o ponteiro de fim já que é o caso de uma lista com apenas um elemento, se não, apontaríamos o ponteiro "anterior" ao 2° elemento para NULL)
+
+
+
+[Image: http://www.commentcamarche.net/faq/images/0-JSeK9FY2-dl-remov-pos1-s-.png|279px|]
+
+[Image: http://www.commentcamarche.net/faq/images/0-DYme6PfQ-dl-remov-pos11-s-.png|500px|]
+
+    A posição escolhida é igual, com o número de elementos da lista
+        o ponteiro remov_elemento conterá o endereço endereço do último elemento
+        nós apontaremos o ponteiro "seguinte" ao antepenúltimo elemento (é o elemento para lo qual aponta o ponteiro "anterior" ao último elemento), para NULL
+        nós atualizaremos o ponteiro de fim
+
+
+
+[Image: http://www.commentcamarche.net/faq/images/0-kE43y3VK-dl-remov-último-s-.png|500px|]
+
+    A posição escolhida é aleatória na lista
+        o ponteiro remov_elemento conterá o endereço do elemento a ser removido
+        o ponteiro "seguinte" ao elemento que precede o elemento a ser removido aponta para o endereço mantido pelo ponteiro "seguinte" ao elemento a ser removido
+        o ponteiro anterior ao elemento que sucede o elemento a ser removido aponta para o endereço mantido pelo ponteiro anterior ao elemento a ser removido.
+        o tamanho da lista será decrementado de um elemento
+
+
+
+[Image: http://www.commentcamarche.net/faq/images/0-5qODJAf9-dl-remov-pos-s-.png|496px|]
+
+A função
+
+int remov(dl_Lista *lista, int pos){   
+  int i;   
+  dl_elemento *remov_elemento,*em curso;   
+
+  if(lista->tamanho == 0)   
+    return -1;   
+
+  if(pos == 1){ /* remoção do 1° elemento */   
+    remov_elemento = lista->início;   
+    lista->início = lista->início->seguinte;   
+    if(lista->início == NULL)   
+      lista->fim = NULL;   
+    else   
+      lista->início->anterior == NULL;   
+  }else if(pos == lista->tamanho){ /* remoção do último elemento */   
+    remov_elemento = lista->fim;   
+    lista->fim->anterior->seguinte = NULL;   
+    lista->fim = lista->fim->anterior;   
+  }else { /* remoção em outro lugar */   
+    em curso = lista->início;   
+      for(i=1;i<pos;++i)   
+        em curso = em curso->seguinte;   
+    remov_elemento = em curso;   
+    em curso->anterior->seguinte = em curso->seguinte;   
+    em curso->seguinte->anterior = em curso->anterior;   
+  }   
+  free(remov_elemento->dado);   
+  free(remov_elemento);   
+  lista->tamanho--;   
+  return 0;   
+}   
+
+
+D. Exibição da lista
+Para exibir a lista inteira nós podemos nos posicionar no início ou no fim da lista (o ponteiro de início ou de fim o permitirá).
+Depois, utilizando o ponteiro "seguinte" ou "anterior" de cada elemento, a lista será percorrida do 1° ao último elemento ou do último ao 1° elemento.
+A condição de parada é dada pelo ponteiro "seguinte" do último elemento que equivale ao NULL no caso da leitura do início para o fim da lista, ou pelo ponteiro "anterior" do 1° elemento que equivale ao NULL, no caso de uma leitura do fim para o início da lista.
+
+As funções
+
+void exibe(dl_Lista *lista){ /* mostrar avançando */   
+  dl_elemento *em curso;   
+  em curso = lista->início; /* ponto de partida do 1° elemento */   
+  printf("[ ");   
+  while(em curso != NULL){   
+    printf("%s ",em curso->dado);   
+    em curso = em curso->seguinte;   
+  }   
+  printf("]\n");   
+}   
+
+void exibe_inv(dl_Lista *lista){ /* mostrar recuando */   
+  dl_elemento *em curso;   
+  em curso = lista->fim; /* ponto de partida do último elemento */   
+  printf("[ ");   
+  while(em curso != NULL){   
+    printf("%s : ",em curso->dado);   
+    em curso = em curso->anterior;   
+  }   
+  printf("]\n");   
+}   
+
+
+E. Destruição da lista
+Para destruir a lista inteira, utilizarei a remoção da posição 1 enquanto o tamanho for maior que zero.
+
+A função
+
+void destruir(dl_Lista *lista){   
+  while(lista->tamanho > 0)   
+    remov(liste,1);   
+}   
+
+
+V. Exemplo completo
+dlista.h
+
+/* ---------- dlista.h ----------- */   
+typedef struct dl_elementoLista{   
+  char *dado;   
+  struct dl_elementoLista *anterior;   
+  struct dl_elementoLista*seguinte;   
+} dl_elemento;   
+
+typedef struct dl_ListaDetectada{   
+  dl_elemento *início;   
+  dl_elemento *fim;   
+  int tamanho;   
+} dl_Lista;   
+
+/* inicialização da lista */   
+void inicialização (dl_Lista * lista);   
+dl_elemento *aloc (dl_elemento * novo_elemento);   
+
+/* INSERÇÃO */   
+int ins_em_uma_lista_vazia (dl_Lista * lista, char *dado);   
+int ins_início_lista (dl_Lista * lista, char *dado);   
+int ins_fim_lista (dl_Lista * lista, char *dado);   
+int ins_depois (dl_Lista * lista, char *dado, int pos);   
+int ins_antes (dl_Lista * lista, char *dado, int pos);   
+
+
+/* REMOÇÃO */   
+int REMOV(dl_Lista *lista, int pos);   
+void exibe (dl_Lista * lista);   
+
+/**************************/   
+void exibe_inv (dl_Lista * lista);   
+void destruir (dl_Lista * lista);   
+/* -------- FIM lista.h --------- */   
+
+
+dlista_function.h
+
+/***************************\   
+
+         dlista_function.h    * 
+
+
+\***************************/   
+void inicialização (dl_Lista * lista){   
+  lista->início = NULL;   
+  lista->fim = NULL;   
+  lista->tamanho = 0;   
+}   
+
+int inserção_em_uma_lista_vazia (dl_Lista * lista, char *dado){   
+  dl_elemento *novo_elemento;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  novo_elemento->anterior = NULL;   
+  novo_elemento->seguinte = NULL;   
+  lista->início = novo_elemento;   
+  lista->fim = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+int ins_início_lista (dl_Lista * lista, char *dado){   
+  dl_elemento *novo_elemento;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  novo_elemento->anterior = NULL;   
+  novo_elemento->seguinte = liste->início;   
+  lista->início->anterior = novo_elemento;   
+  lista->início = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+int ins_fim_lista (dl_Lista * lista, char *dado){   
+  dl_elemento *novo_elemento;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  novo_elemento->seguinte = NULL;   
+  novo_elemento->anterior = lista->fim;   
+  lista->fim->seguinte = novo_elemento;   
+  lista->fim = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+int ins_depois (dl_Lista * lista, char *dado, int pos){   
+  int i;   
+  dl_elemento *novo_elemento, *em curso;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  em curso = lista->início;   
+  for (i = 1; i < pos; ++i)   
+    em curso = em curso->seguinte;   
+  novo_elemento->seguinte = em curso->seguinte;   
+  novo_elemento->anterior = em curso;   
+  if(em curso->seguinte == NULL)   
+    lista->fim = novo_elemento;   
+  else   
+    em curso->seguinte->anterior = novo_elemento;   
+  em curso->seguinte = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+int ins_antes (dl_Lista * lista, char *dado, int pos){   
+  int i;   
+  dl_elemento *novo_elemento, *em curso;   
+  if ((novo_elemento = aloc (novo_elemento)) == NULL)   
+    return -1;   
+  strcpy (novo_elemento->dado, dado);   
+  em curso = lista->início;   
+  for (i = 1; i < pos; ++i)   
+    em curso = em curso->seguinte;   
+  novo_elemento->seguinte = em curso;   
+  novo_elemento-> anterior = em curso->anterior;   
+  if(em curso->anterior == NULL)   
+    lista->início = novo_elemento;   
+  else   
+    em curso->anterior->seguinte = novo_elemento;   
+  em curso->anterior = novo_elemento;   
+  lista->tamanho++;   
+  return 0;   
+}   
+
+int remov(dl_Lista *lista, int pos){   
+  int i;   
+  dl_elemento *remov_elemento,*em curso;   
+     
+  if(liste->tamanho == 0)   
+    return -1;   
+
+  if(pos == 1){ /* remoção do 1° elemento */   
+    remov_elemento = lista->início;   
+    lista->início = lista->início->seguinte;   
+    if(lista->início == NULL)   
+      lista->fim = NULL;   
+    else   
+      lista->início->anterior == NULL;   
+  }else if(pos == lista->tamanho){ /* remoção do último elemento */   
+    remov_elemento = lista->fim;   
+    lista->fim->anterior->seguinte = NULL;   
+    lista->fim = lista->fim->anterior;   
+  }else { /* remoção em outro lugar */   
+    em curso = lista->início;   
+    for(i=1;i<pos;++i)   
+     em curso = em curso->seguinte;   
+    remov_elemento = em curso;   
+    em curso->anterior->seguinte = em curso->seguinte;   
+    em curso->seguinte->anterior = em curso->anterior;   
+  }   
+  free(remov_elemento->dado);   
+  free(remov_elemento);   
+  lista->tamanho--;   
+  return 0;   
+}   
+
+void destruir(dl_Lista *lista){   
+  while(lista->tamanho > 0)   
+    remov(lista,1);   
+}   
+
+dl_elemento *aloc (dl_elemento * novo_elemento){   
+  if ((novo_elemento = (dl_elemento *) malloc (sizeof (dl_elemento))) == NULL)   
+    return NULL;   
+  if ((novo_elemento->dado = (char *) malloc (50 * sizeof (char)))   
+      == NULL)   
+    return NULL;   
+  return novo_elemento;   
+}   
+
+int menu (dl_Lista *lista){   
+  int escolha;   
+  if (lista->tamanho == 0){   
+    printf ("1. Adição do 1° elemento\n");   
+    printf ("2. Fechar\n");   
+  }  else{   
+    printf ("1. Adição no início da lista\n");   
+    printf ("2. Adição no final da lista\n");   
+    printf ("3. Adição antes da posição especificada\n");   
+    printf ("4. Adição depois da posição especificada\n");   
+    printf ("5. Remoção da posição especificada\n");   
+    printf ("6. Destruir a lista\n");   
+    printf ("7. Fechar\n");   
+  }   
+  printf ("\n\nFaça sua escolha: ");   
+  scanf ("%d", &escolha);   
+  getchar();   
+  if(lista->tamanho == 0 && escolha == 2)   
+    escolha = 7;   
+  return escolha;   
+}   
+int remov(dl_Lista *lista, int pos);   
+void exibe(dl_Lista *lista){   
+ dl_elemento *em curso;   
+ em curso = lista->início;   
+ printf("[ ");   
+ while(em curso != NULL){   
+  printf("%s ",em curso->dado);   
+  em curso = em curso->seguinte;   
+ }   
+ printf("]\n");   
+}   
+void exibe_inv(dl_Lista *lista){   
+ dl_elemento *em curso;   
+ em curso = lista->fim;   
+ while(em curso != NULL){   
+  printf("%s : ",em curso->dado);   
+  em curso = em curso->anterior;   
+ }   
+ printf("\n");   
+}   
+/* -------- FIM dlista_function.h --------- */   
+
+
+dlista.c
+
+/**********************\   
+
+         dlista.c        * 
+
+
+\**********************/   
+#include <stdio.h>   
+#include <stdlib.h>   
+#include <string.h>   
+#include "dlista.h"   
+#include "dlista_function.h"   
+
+int main (void)   
+{   
+
+  int escolha = 0,pos;   
+  char *dado;   
+  dado = malloc(50);   
+  dl_Lista *lista;   
+  dl_elemento *pilote = NULL;   
+  lista = (dl_Lista *) malloc (sizeof(dl_Lista));   
+
+  inicialização(liste);   
+
+  while( escolha!= 7){   
+    escolha = menu(lista);   
+    switch(escolha){   
+      case 1:   
+             printf("Entre um elemento: ");   
+      scanf("%s",dado);   
+      getchar();   
+      if(lista->tamanho == 0)   
+               inserção_em_uma_lista_vazia(lista,dado);   
+      else   
+               ins_início_lista (lista, dado);   
+      printf("%d elementos: início=%s,fim=%s ",   
+        lista->tamanho,lista->início->dado,lista->fim->dado);   
+      exibe(lista);   
+      break;   
+      case 2:   
+      printf("Entre um elemento: ");   
+      scanf("%s",dado);   
+      getchar();   
+      ins_fim_lista (lista, dado);   
+      printf("%d elementos: início=%s,fim=%s ",   
+        lista->tamanho,lista->início->dado,lista->fim->dado);   
+      exibe(lista);   
+      break;   
+      case 3:   
+      if(lista->tamanho == 1){   
+               printf("Utilizar a inserção no início ou no fim (Entrar Menu: 1 ou 2)\n");   
+        break;   
+      }   
+      printf("Entre um elemento:");   
+      scanf("%s",dado);   
+      getchar();   
+      do{   
+                 printf("Entre a posição:");   
+   scanf("%d",&pos);   
+      }while (pos < 1 || pos > lista->tamanho);   
+      getchar();   
+      ins_antes(lista,dado,pos);   
+      printf("%d elementos: início=%s fim=%s ",   
+        lista->tamanho,lista->início->dado,lista->fim->dado);   
+      exibe(lista);   
+      break;   
+      case 4:   
+      if(lista->tamanho == 1){   
+       printf("Utilizar a inserção no início ou no fim (Entrar Menu: 1 ou 2)\n");   
+       break;   
+      }   
+      printf("Entre um elemento : ");   
+      scanf("%s",dado);   
+      getchar();   
+      do{   
+                 printf("Entre a posição: ");   
+   scanf("%d",&pos);   
+      }while (pos < 1 || pos > lista->tamanho);   
+      getchar();   
+      ins_depois(lista,dado,pos);   
+      printf("%d elementos: início=%s,fim=%s ",   
+        lista->tamanho,lista->início->dado,lista->fim->dado);   
+      exibe(lista);   
+      break;   
+      case 5:   
+      do{   
+                 printf("Entre a posição: ");   
+   scanf("%d",&pos);   
+      }while (pos < 1 || pos > posição->tamanho);   
+      getchar();   
+      remov(posição,pos);   
+      if(posição->tamanho != 0)   
+               printf("%d elementos: início=%s,fim=%s ",   
+          posição->tamanho,posição->início->dado,posição->fim->dado);   
+      else   
+               printf("posição vazia: %d elementos",posição->tamanho);   
+      exibe(posição);   
+      break;   
+      case 6:   
+      destruir(posição);   
+      printf("a posição foi destruída: %d elementos\n",posição->tamanho);   
+      break;   
+    }   
+  }   
+  return 0;   
+}   
+/* -------- FIM dlista.c --------- */   
+
+
+VI. Veja também
+
+    As listas simplesmente encadeadas
+    As listas circulares
+    As pilhas
+    As filas
+    Lista duplamente encadeada
+
+
+
+
+Artigo original publicado por lami20j
+
+Tradução feita por Lucia Maurity y Nouira
+
+Para uma leitura offline, é possível baixar gratuitamente este artigo no formato PDF:
+Lista-duplamente-encadeada.pdf
+Veja também
+
+    Lista duplamente encadeada
+    Lista duplamente ligada
+    Lista duplamente encadeada programaçao
+    Listas simplesmente encadeadas » Dicas - C
+    Remover um número da lista de chamadas rejeitadas no Samsung » Dicas - Samsung
+    Como saber se alguém te bloqueou no WhatsApp » Dicas - WhatsApp
+    Atualizar lista » Dicas - WhatsApp
+    YouTube: Criar uma lista de tags padrão para os seus vídeos » Dicas - YouTube
+
+Na mesma categoria
+
+    Listas circulares (Ring Buffer)
+    Listas simplesmente encadeadas
+    Manipular inteiros no 64 bits
+    O que faz um fork ()?
+
+    Os ponteiros em linguagem C
+    Os recursos em linguagem C/C++
+    Permutar duas variáveis sem o uso de uma variável temp
+    Verificar se um inteiro é um número primo em C 
+
+Rearrange the Order of Your PowerPoint Presentation
+Rearrange the Order of Your PowerPoint Presentation
+Por deri58 em 31 de outubro de 2012
+Linux: El comando fdisk
+Linux: El comando fdisk
+Por pablojorgesanguinetti1 em 20 de junho de 2013
+Tagliare file audio in PowerPoint 2010
+Tagliare file audio in PowerPoint 2010
+Por apfel9 em 20 de maio de 2015
+Publicado por pintuda.
+Este documento, intitulado « Lista duplamente encadeada »a partir de CCM (br.ccm.net) está disponibilizado sob a licença Creative Commons. Você pode copiar, modificar cópias desta página, nas condições estipuladas pela licença, como esta nota aparece claramente.
+Anterior
+
+Listas circulares (Ring Buffer)
+Próximo
+
+Listas simplesmente encadeadas
+Receba a nossa newsletter
+
+    Cadastre-se Equipe Termos de uso Contato Regulamento 
+
+saude.ccm.net
+
