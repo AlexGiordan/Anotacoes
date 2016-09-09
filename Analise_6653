@@ -1,0 +1,22 @@
+Itens para questionar
+1.	Definir off line interno.
+2.	Definir off line externo.
+3.	Definir métodos e fluxo para que independentemente do tipo de off line as venda não parem.
+Pensando em um cenário interno com servidor local e PDV-NFC-e.
+ O ponto de venda possa em seu banco local ter todos os dados necessários para efetuar as vendas congruentes a legislação em vigor; contemplando produtos, clientes, impostos, dados do emissor; esses dados já foram levantados no tíquete #6653. Resumidamente o ponto de venda não pode ou não deveria ficar fazendo consulta no servidor, parte do princípio que seu banco local está atualizado e congruente com o servidor.  Tudo o que for necessário de regra de negócio ou logica de implementação deve utilizar o banco local para não ficar dependente do servidor. Desta forma o PDV-NFC-e trabalha de forma independente do servidor podendo operar com o servidor no ar ou não.
+Pensando em quais as possíveis condições para o PDV_NFC-e deve entrar em contingencia.
+1.	PDV-NFC-e sem internet.
+2.	PDV-NFC-e com internet porem Sefaz OffLine.
+3.	PDV-NFC-e com Time Out.
+Ponto 1 Implementar um método para identificar se existe comunicação com o http do sefaz destino caso false deve identificar contingência e TpEmis = 2.
+Ponto 2  Implementar uma configuração no configurador do NFC-e para definir o tempo de espera e número de tentativas de comunicação com o sefaz caso extrapole esse numero de diretiva o NFC-e deve identificar contingência e TpEmis = 2. (atenção duplicidade)
+A condição 1 e 2 é atendida pelo ponto 1 e a condição 3 é atendida pelo ponto 2.
+A nota fiscal em contingencia é emitida igualmente a nota normal com chave, site de acesso, qrcode o único diferencial é a ausência do protocolo de autorização que sera recebido após o envio posterior da nota.
+Uma nota emitida em contingencia em o prazo para ser reenviada variando entre 24h a 48h dependendo da UF horas a contar da hora da impressão da contingencia, a assinatura da nota deve ser feita no momento do enviou.
+Implementar método para identificar qtde de NFC-e em contingencia.
+Implementar método para determinar o envio de todas ou x NFC-e em contingencia.
+
+
+
+
+
