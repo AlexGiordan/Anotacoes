@@ -15,7 +15,7 @@ A nota fiscal em contingencia é emitida igualmente a nota normal com chave, sit
 Uma nota emitida em contingencia em o prazo para ser reenviada variando entre 24h a 48h dependendo da UF horas a contar da hora da impressão da contingencia, a assinatura da nota deve ser feita no momento do enviou.
 Implementar método para identificar qtde de NFC-e em contingencia.
 Implementar método para determinar o envio de todas ou x NFC-e em contingencia.
-
+ 
 
 
 
